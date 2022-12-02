@@ -72,6 +72,7 @@ namespace lpz{
             void fill_circle(std::size_t x, std::size_t y, const circle &circ);
             void fill_rect(std::size_t x, std::size_t y, const rectangle &rect);
             void fill_canvas(color c);
+            void draw_line(std::size_t x1, std::size_t y1, std::size_t x2, std::size_t y2, const color &cl);
             size const& getSize() const;
             void write();
     };

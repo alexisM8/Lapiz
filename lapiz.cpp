@@ -44,6 +44,18 @@ void lapiz::fill_canvas(color c){
     }
 }
 
+void lapiz::draw_line(std::size_t x1, std::size_t y1, std::size_t x2, std::size_t y2, const color &cl){
+    if(x1 >= 0 && y1 >= 0){
+       if(x2 <= m_size.width && y2 <= m_size.heigth){
+            //write code for creating line
+       }else{
+            std::cout << "ERROR: ending corrdiantes must be less than or equal to canvas\n";
+       }
+    }else{
+        std::cout << "ERROR: starting corrdiantes must be greater than or equal to 0\n";
+    }
+}
+
 size const& lapiz::getSize() const{
     return m_size;
 }
