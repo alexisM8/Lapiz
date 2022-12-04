@@ -10,12 +10,12 @@ Lapiz is a very simple 2d header only graphics library for c++. It was created t
 
 ### Dependecies
 
-*CMake version >= 3.14.4
-*clangd version >= 9.00
+* CMake version >= 3.14.4
+* clangd version >= 9.00
 
 ### Installing
 
-*Clone the repository in a desired location
+* Clone the repository in a desired location
 
 ### Executing Program
 
@@ -23,17 +23,17 @@ The example program provided will draw a 2d grid of circles and output it to ima
 
 * Navigate to build directory
 * execute the command:
-'''
+```
 cmake -S ../ -B .
-'''
+```
 * a makefile will be generated compile the program:
-'''
+```
 make
-'''
+```
 * run the program:
-'''
+```
 ./Lapiz
-'''
+```
 ## Authors
 Alexis Rodriguez aka alexisM8
 
