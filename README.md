@@ -41,7 +41,6 @@ Generating lines:
 #include <iostream>
 
 int main(int argc, const char * argv[]) {
-    int row{2}, col{2};
     lpz::lapiz canvas(800, 800, "lines.ppm");
     canvas.fill_canvas(lpz::BLACK);
 
