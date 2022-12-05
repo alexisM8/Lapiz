@@ -37,33 +37,36 @@ namespace lpz{
     constexpr std::size_t default_width  = 800;  //pixles
     constexpr char default_name[] = "image.ppm";
 
-    typedef std::int32_t color;
+    // typedef std::int32_t color;
     
-    struct  color_components{
-        color r;
-        color g;
-        color b;
-        color a;
-    };
 
     struct size{
         std::size_t height;
         std::size_t width;
     };
 
-    constexpr color RED        = 0xFF0000;
-    constexpr color GREEN      = 0x00FF00;
-    constexpr color BLUE       = 0x0000FF;
-    constexpr color BROWN      = 0x5F4828;
-    constexpr color LIGHTBLUE  = 0x20DDFF;
-    constexpr color YELLOW     = 0xFFFF00;
-    constexpr color LIGHTPINK  = 0xFFC0CB;
-    constexpr color BLACK      = 0x000000;
-    constexpr color WHITE      = 0xFFFFFF;
-    constexpr color ORANGE     = 0xF06F0F;
-    constexpr color DARKPINK   = 0x9F2B68;
-    constexpr color HOTPINK    = 0xFF0092;
-    constexpr color PURPLE     = 0x3C005A;
+    enum class color{
+        RED        = 0xFF0000,
+        GREEN      = 0x00FF00,
+        BLUE       = 0x0000FF, 
+        BROWN      = 0x5F4828, 
+        LIGHTBLUE  = 0x20DDFF,
+        YELLOW     = 0xFFFF00, 
+        LIGHTPINK  = 0xFFC0CB,
+        BLACK      = 0x000000, 
+        WHITE      = 0xFFFFFF,
+        ORANGE     = 0xF06F0F,
+        DARKPINK   = 0x9F2B68,
+        HOTPINK    = 0xFF0092,
+        PURPLE     = 0x3C005A
+    };
+
+    struct  color_components{
+        color r;
+        color g;
+        color b;
+        color a;
+    };
 
     struct rectangle{
            color c; 
@@ -110,8 +113,6 @@ namespace lpz{
                             m_pixles[x1 * m_size.width + y1] = rect.c;
                         }
                     }
-               }else{
-                    std::cerr << "ERROR: invalid rectangle dimentions <larger than canvas> !\n";
                     return;
                }
             }
@@ -153,11 +154,11 @@ namespace lpz{
                 file << "P3 " << m_size.width << " " << m_size.height << " 255\n";
                 for(std::size_t y = 0; y < m_size.height; y++){
                     for(std::size_t x = 0; x < m_size.width; x++){
-                        const color curr = m_pixles[x * m_size.width + y];
-                        comps.r = (curr&0xFF0000)>>(8*2); 
-                        comps.g = (curr&0x00FF00)>>(8*1);
-                        comps.b = (curr&0x0000FF)>>(8*0); 
-                        file << comps.r << " " << comps.g << " " << comps.b << " ";
+                        color curr = m_pixles[x * m_size.width + y];
+                        comps.r = static_cast<color>((static_cast<int>(curr)&static_cast<int>(color::RED))>>(8*2)); 
+                        comps.g = static_cast<color>((static_cast<int>(curr)&static_cast<int>(color::GREEN))>>(8*1)); 
+                        comps.b = static_cast<color>((static_cast<int>(curr)&static_cast<int>(color::BLUE))>>(8*0)); 
+                        file << static_cast<int>(comps.r) << " " << static_cast<int>(comps.g) << " " << static_cast<int>(comps.b) << " ";
                         // std::cout << comps.r << " " << comps.g << " " << comps.b << " ";
                     }
                     file << "\n";
