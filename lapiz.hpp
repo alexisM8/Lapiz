@@ -21,7 +21,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 
 */
-
 #ifndef lapiz_hpp
 #define lapiz_hpp
 
@@ -55,11 +54,15 @@ namespace lpz{
     constexpr color RED        = 0xFF0000;
     constexpr color GREEN      = 0x00FF00;
     constexpr color BLUE       = 0x0000FF;
+    constexpr color BROWN      = 0x5F4828;
+    constexpr color LIGHTBLUE  = 0x20DDFF;
     constexpr color YELLOW     = 0xFFFF00;
     constexpr color LIGHTPINK  = 0xFFC0CB;
     constexpr color BLACK      = 0x000000;
     constexpr color WHITE      = 0xFFFFFF;
+    constexpr color ORANGE     = 0xF06F0F;
     constexpr color DARKPINK   = 0x9F2B68;
+    constexpr color HOTPINK    = 0xFF0092;
     constexpr color PURPLE     = 0x3C005A;
 
     struct rectangle{
@@ -79,17 +82,17 @@ namespace lpz{
     class lapiz{
         private:
             size m_size;
-            // std::size_t m_height;
-            // std::size_t m_width;
             std::string m_filename;
             std::vector<color> m_pixles;
         public:
             lapiz() : m_size({default_height, default_width}), m_filename(default_name) { 
                 m_pixles = std::vector<color>(m_size.width*m_size.height); 
             } 
+
             lapiz(std::size_t WIDTH, std::size_t HEIGHT, std::string FILENAME) : m_size({HEIGHT, WIDTH}), m_filename(FILENAME) { 
                 m_pixles = std::vector<color>(m_size.width*m_size.height); 
             };
+
             void fill_circle(std::size_t x, std::size_t y, const circle &circ){
                 std::pair<int, int> center(x+circ.radius, y+circ.radius);
                 for(int y1 = y; y1 < y+circ.radius*2; y1++){
@@ -97,7 +100,6 @@ namespace lpz{
                         auto dist = std::sqrt((std::pow(center.first-x1 , 2) + std::pow(center.second-y1 , 2)));
                         if(std::floor(dist) <= circ.radius){
                             m_pixles[x1 * m_size.width + y1] = circ.c;
-
                         }
                     }
                 }
@@ -136,10 +138,10 @@ namespace lpz{
                            m_pixles[x * m_size.width + y] = cl;
                        }
                    }else{
-                        std::cout << "ERROR: ending corrdiantes must be less than or equal to canvas\n";
+                        std::cerr << "ERROR: ending corrdiantes must be less than or equal to canvas\n";
                    }
                 }else{
-                    std::cout << "ERROR: starting corrdiantes must be greater than or equal to 0\n";
+                    std::cerr << "ERROR: starting corrdiantes must be greater than or equal to 0\n";
                 }
             }
 
@@ -157,7 +159,6 @@ namespace lpz{
                         comps.r = (curr&0xFF0000)>>(8*2); 
                         comps.g = (curr&0x00FF00)>>(8*1);
                         comps.b = (curr&0x0000FF)>>(8*0); 
-                        // comps.a = (curr>>8*0)&0xFF; 
                         file << comps.r << " " << comps.g << " " << comps.b << " ";
                         // std::cout << comps.r << " " << comps.g << " " << comps.b << " ";
                     }
