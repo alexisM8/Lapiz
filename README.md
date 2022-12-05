@@ -21,12 +21,19 @@ Lapiz is a very simple 2d header only graphics library for c++. It was created t
 
 The example program provided will draw a 2d grid of circles and output it to image.ppm
 
+* create a build directory: 
+```
+mkdir build
+```
 * Navigate to build directory
+```
+cd build
+```
 * execute the command:
 ```
 cmake -S ../ -B .
 ```
-* a makefile will be generated compile the program:
+* a makefile will be generated, compile the program:
 ```
 make
 ```
