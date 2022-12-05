@@ -84,6 +84,11 @@ int main(int argc, const char * argv[]) {
 will produce the circle.ppm file which when converted to a .png looks like:
 ![circles](https://github.com/alexisM8/Lapiz/blob/main/examples/circles.png)
 
+## To Do
+* Support for triangles
+* Support for polinomials
+* Support for arcs/curving lines
+
 ## Authors
 Alexis Rodriguez aka alexisM8
 
