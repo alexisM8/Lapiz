@@ -84,6 +84,34 @@ int main(int argc, const char * argv[]) {
 will produce the circle.ppm file which when converted to a .png looks like:
 ![circles](https://github.com/alexisM8/Lapiz/blob/main/examples/circles.png)
 
+Generating a checkerboard:
+```cpp
+#include "lapiz.hpp" 
+#include <iostream>
+
+int main(int argc, const char * argv[]) {
+    int row{8}, col{8};
+    lpz::lapiz canvas(800, 800, "checkerboard.ppm");
+    canvas.fill_canvas(lpz::DARKPINK);
+
+    for(int i = 0; i < row; i++){
+        for(int j = 0; j < col; j++){
+            if(i % 2 == 0 && j % 2 == 0){
+                canvas.fill_rect(j*canvas.getSize().width/col, i*canvas.getSize().height/row,
+                                 lpz::rectangle(canvas.getSize().height/row, canvas.getSize().width/col, lpz::LIGHTPINK));
+            }else if(i % 2 == 1 && j % 2 == 1){
+                canvas.fill_rect(j*canvas.getSize().width/col, i*canvas.getSize().height/row,
+                                 lpz::rectangle(canvas.getSize().height/row, canvas.getSize().width/col, lpz::LIGHTPINK));
+            }
+        }
+    }
+    canvas.write();
+    return 0;
+}
+```
+will produce the checkerboard.ppm file which when converted to a .png looks like:
+![checkers](https://github.com/alexisM8/Lapiz/blob/main/examples/chekerboard.png)
+
 ## To Do
 * Support for triangles
 * Support for polinomials

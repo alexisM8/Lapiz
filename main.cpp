@@ -4,16 +4,22 @@
 
 
 int main(int argc, const char * argv[]) {
-    lpz::lapiz canvas(800, 800, "lines.ppm");
-    canvas.fill_canvas(lpz::BLACK);
+    int row{8}, col{8};
+    lpz::lapiz canvas(800, 800, "checkerboard.ppm");
+    canvas.fill_canvas(lpz::DARKPINK);
 
-    canvas.draw_line(0, 0, canvas.getSize().width, canvas.getSize().height, lpz::YELLOW);
-    canvas.draw_line(0, canvas.getSize().height, canvas.getSize().width, 0, lpz::GREEN);
-    canvas.draw_line(0, canvas.getSize().height/2, canvas.getSize().width, canvas.getSize().height/2, lpz::LIGHTPINK);
-
+    for(int i = 0; i < row; i++){
+        for(int j = 0; j < col; j++){
+            if(i % 2 == 0 && j % 2 == 0){
+                canvas.fill_rect(j*canvas.getSize().width/col, i*canvas.getSize().height/row,
+                                 lpz::rectangle(canvas.getSize().height/row, canvas.getSize().width/col, lpz::LIGHTPINK));
+            }else if(i % 2 == 1 && j % 2 == 1){
+                canvas.fill_rect(j*canvas.getSize().width/col, i*canvas.getSize().height/row,
+                                 lpz::rectangle(canvas.getSize().height/row, canvas.getSize().width/col, lpz::LIGHTPINK));
+            }
+        }
+    }
     canvas.write();
     return 0;
 }
  
- 
-
