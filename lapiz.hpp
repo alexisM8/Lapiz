@@ -85,16 +85,14 @@ namespace lpz{
             std::string m_filename;
             std::vector<color> m_pixles;
         public:
-            lapiz() : m_size({default_height, default_width}), m_filename(default_name) { 
-                m_pixles = std::vector<color>(m_size.width*m_size.height); 
-            } 
+            lapiz() : m_size({default_height, default_width}), m_filename(default_name), 
+                        m_pixles(std::vector<color>(default_width*default_height)) {} 
 
-            lapiz(std::size_t WIDTH, std::size_t HEIGHT, std::string FILENAME) : m_size({HEIGHT, WIDTH}), m_filename(FILENAME) { 
-                m_pixles = std::vector<color>(m_size.width*m_size.height); 
-            };
+            lapiz(std::size_t WIDTH, std::size_t HEIGHT, std::string FILENAME) : m_size({HEIGHT, WIDTH}),
+                        m_filename(FILENAME), m_pixles(std::vector<color>(WIDTH*HEIGHT)) {}
 
             void fill_circle(std::size_t x, std::size_t y, const circle &circ){
-                std::pair<int, int> center(x+circ.radius, y+circ.radius);
+                const std::pair<int, int> center(x+circ.radius, y+circ.radius);
                 for(int y1 = y; y1 < y+circ.radius*2; y1++){
                     for(int x1 = x; x1 < x+circ.radius*2; x1++){
                         auto dist = std::sqrt((std::pow(center.first-x1 , 2) + std::pow(center.second-y1 , 2)));
@@ -130,8 +128,8 @@ namespace lpz{
                 if(x1 >= 0 && y1 >= 0){
                    if(x2 <= m_size.width && y2 <= m_size.height){
                         //write code for creating line
-                       int dy{ static_cast<int>(y2-y1) };
-                       int dx{ static_cast<int>(x2-x1) };
+                       const int dy{ static_cast<int>(y2-y1) };
+                       const int dx{ static_cast<int>(x2-x1) };
                        for(int i = 0; i < dx; i++){
                            int x = x1 + i;
                            int y = y1 + dy * i / dx;
@@ -155,7 +153,7 @@ namespace lpz{
                 file << "P3 " << m_size.width << " " << m_size.height << " 255\n";
                 for(std::size_t y = 0; y < m_size.height; y++){
                     for(std::size_t x = 0; x < m_size.width; x++){
-                        color curr = m_pixles[x * m_size.width + y];
+                        const color curr = m_pixles[x * m_size.width + y];
                         comps.r = (curr&0xFF0000)>>(8*2); 
                         comps.g = (curr&0x00FF00)>>(8*1);
                         comps.b = (curr&0x0000FF)>>(8*0); 
