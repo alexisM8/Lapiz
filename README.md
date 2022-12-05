@@ -82,3 +82,5 @@ will produce the circle.ppm file which when converted to a .png looks like:
 ## Authors
 Alexis Rodriguez aka alexisM8
 
+## Licence
+This project is licensed under the MIT License - see the LICENSE.md file for details
