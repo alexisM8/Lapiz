@@ -127,15 +127,21 @@ namespace lpz{
 
             void draw_line(std::size_t x1, std::size_t y1, std::size_t x2, std::size_t y2, const color &cl){
                 if(x1 >= 0 && y1 >= 0){
-                   if(x2 <= m_size.width && y2 <= m_size.height){
+                    if(x2 <= m_size.width && y2 <= m_size.height){
                         //write code for creating line
-                       const int dy{ static_cast<int>(y2-y1) };
-                       const int dx{ static_cast<int>(x2-x1) };
-                       for(int i = 0; i < dx; i++){
-                           int x = x1 + i;
-                           int y = y1 + dy * i / dx;
-                           m_pixles[x * m_size.width + y] = cl;
-                       }
+                        const int dy{ static_cast<int>(y2-y1) };
+                        const int dx{ static_cast<int>(x2-x1) };
+                        if(dx != 0){
+                            for(int i = 0; i < dx; i++){
+                               int x = x1 + i;
+                               int y = y1 + dy * i / dx;
+                               m_pixles[x * m_size.width + y] = cl;
+                           }
+                        }else{
+                            for(int y = y1; y < y2; y++){
+                                m_pixles[x1 * m_size.width + y] = cl;
+                            }
+                        }
                    }else{
                         std::cerr << "ERROR: ending corrdiantes must be less than or equal to canvas\n";
                    }
@@ -143,7 +149,11 @@ namespace lpz{
                     std::cerr << "ERROR: starting corrdiantes must be greater than or equal to 0\n";
                 }
             }
-
+            
+            void fill_triangle(){
+                
+            }
+    
             size const& getSize() const{
                 return m_size;
             }
