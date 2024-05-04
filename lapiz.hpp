@@ -39,7 +39,6 @@ namespace lpz{
 
     // typedef std::int32_t color;
     
-
     struct size{
         std::size_t height;
         std::size_t width;
@@ -150,7 +149,8 @@ namespace lpz{
                 }
             }
             
-            void fill_triangle(){
+            void fill_triangle(std::size_t x1, std::size_t y1, std::size_t x2, std::size_t y2, std::size_t x3, std::size_t y3){
+                //can I find a way to 'fill' the triangle by just drawing lines
                 
             }
     

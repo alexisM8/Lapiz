@@ -4,20 +4,18 @@
 
 
 int main(int argc, const char * argv[]) {
-    int row{8}, col{8};
-    lpz::lapiz canvas(800, 800, "checkerboard.ppm");
-    canvas.fill_canvas(lpz::BLACK);
+    lpz::lapiz canvas(800, 800, "lines.ppm");
+    canvas.fill_canvas(lpz::color::BLACK);
+    
+    int numCircle{8};
+    int radius{canvas.getSize().width/2};
+    int xpos{0}, ypos{0};
 
-    for(int i = 0; i < row; i++){
-        for(int j = 0; j < col; j++){
-            if(i % 2 == 0 && j % 2 == 0){
-                canvas.fill_rect(j*canvas.getSize().width/col, i*canvas.getSize().height/row,
-                                 lpz::rectangle(canvas.getSize().height/row, canvas.getSize().width/col, lpz::WHITE));
-            }else if(i % 2 == 1 && j % 2 == 1){
-                canvas.fill_rect(j*canvas.getSize().width/col, i*canvas.getSize().height/row,
-                                 lpz::rectangle(canvas.getSize().height/row, canvas.getSize().width/col, lpz::WHITE));
-            }
-        }
+    for(int i = 0; i < numCircle; i++){
+        canvas.fill_canvas(xpos, ypos, lpz::circle(radius, lpz::color::GREEN));
+        xpos+= radius;
+        ypos += radius;
+        radius /= 2;
     }
     canvas.write();
     return 0;
