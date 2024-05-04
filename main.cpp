@@ -5,18 +5,17 @@
 
 int main(int argc, const char * argv[]) {
     lpz::lapiz canvas(800, 800, "lines.ppm");
-    canvas.fill_canvas(lpz::color::BLACK);
-    
-    int numCircle{8};
-    int radius{canvas.getSize().width/2};
-    int xpos{0}, ypos{0};
 
-    for(int i = 0; i < numCircle; i++){
-        canvas.fill_canvas(xpos, ypos, lpz::circle(radius, lpz::color::GREEN));
-        xpos+= radius;
-        ypos += radius;
-        radius /= 2;
-    }
+    lpz::point p1{10, 30};
+    lpz::point p2{600, 120};
+    lpz::point p3{123, 700};
+
+    canvas.fill_canvas(lpz::color::BLACK);
+    canvas.fill_rect(p1, lpz::rectangle(4, 4,lpz::color::RED));
+    canvas.fill_rect(p2, lpz::rectangle(4, 4,lpz::color::RED));
+    canvas.fill_rect(p3, lpz::rectangle(4, 4,lpz::color::RED));
+    canvas.fill_triangle(p1, p2, p3, lpz::color::WHITE);
+
     canvas.write();
     return 0;
 }

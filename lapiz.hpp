@@ -24,10 +24,11 @@ DEALINGS IN THE SOFTWARE.
 #ifndef lapiz_hpp
 #define lapiz_hpp
 
-#include <cstddef>
+#include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <vector>
+#include <ranges>
 #include <string>
 #include <cstdint>
 #include <iostream>
@@ -38,6 +39,13 @@ namespace lpz{
     constexpr char default_name[] = "image.ppm";
 
     // typedef std::int32_t color;
+
+    struct point{
+        std::size_t x;
+        std::size_t y;
+    };
+
+    
     
     struct size{
         std::size_t height;
@@ -80,6 +88,32 @@ namespace lpz{
         std::size_t radius;
         circle(std::size_t r, color cl) : radius(r), c(cl) {};
     };
+    
+    //utility functions begin
+    std::size_t min_x(const std::vector<point>& points){
+        auto copy = points;
+        std::sort(copy.begin(), copy.end(), [](const auto& p1, const auto& p2){return p1.x < p2.x;});
+        return copy.front().x;
+    }
+
+    std::size_t max_x(const std::vector<point>& points){
+        auto copy = points;
+        std::sort(copy.begin(), copy.end(), [](const auto& p1, const auto& p2){return p1.x > p2.x;});
+        return copy.front().x;
+    }
+
+    std::size_t min_y(const std::vector<point>& points){
+        auto copy = points;
+        std::sort(copy.begin(), copy.end(), [](const auto& p1,const auto& p2){return p1.y < p2.y;});
+        return copy.front().y;
+    }
+
+    std::size_t max_y(const std::vector<point>& points){
+        auto copy = points;
+        std::sort(copy.begin(), copy.end(), [](const auto& p1,const auto& p2){return p1.y > p2.y;});
+        return copy.front().x;
+    }
+    //utility functions end
 
     class lapiz{
         private:
@@ -93,11 +127,11 @@ namespace lpz{
             lapiz(std::size_t WIDTH, std::size_t HEIGHT, std::string FILENAME) : m_size({HEIGHT, WIDTH}),
                         m_filename(FILENAME), m_pixles(std::vector<color>(WIDTH*HEIGHT)) {}
 
-            void fill_circle(std::size_t x, std::size_t y, const circle &circ){
-                const std::pair<int, int> center(x+circ.radius, y+circ.radius);
-                for(int y1 = y; y1 < y+circ.radius*2; y1++){
-                    for(int x1 = x; x1 < x+circ.radius*2; x1++){
-                        auto dist = std::sqrt((std::pow(center.first-x1 , 2) + std::pow(center.second-y1 , 2)));
+            void fill_circle(const point& p, const circle &circ){
+               const point center{p.x + circ.radius, p.y + circ.radius};
+               for(int y1 = p.y; y1 < p.y + circ.radius * 2; y1++){
+                    for(int x1 = p.x; x1 < p.x + circ.radius * 2; x1++){
+                        auto dist = std::sqrt((std::pow(center.x - x1, 2) + std::pow(center.y - y1, 2)));
                         if(std::floor(dist) <= circ.radius){
                             m_pixles[x1 * m_size.width + y1] = circ.c;
                         }
@@ -105,10 +139,10 @@ namespace lpz{
                 }
             }
                 
-            void fill_rect(std::size_t x, std::size_t y, const rectangle &rect){
-               if(x + rect.length <= m_size.height && y + rect.width <= m_size.width){
-                    for(std::size_t y1 = y; y1 < y+rect.width; y1++){
-                        for(std::size_t x1 = x; x1 < x+rect.length; x1++){
+            void fill_rect(const point& p, const rectangle &rect){
+               if(p.x + rect.length <= m_size.height && p.y + rect.width <= m_size.width){
+                    for(std::size_t y1 = p.y; y1 < p.y + rect.width; y1++){
+                        for(std::size_t x1 = p.x; x1 < p.x + rect.length; x1++){
                             m_pixles[x1 * m_size.width + y1] = rect.c;
                         }
                     }
@@ -124,21 +158,20 @@ namespace lpz{
                 }
             }
 
-            void draw_line(std::size_t x1, std::size_t y1, std::size_t x2, std::size_t y2, const color &cl){
-                if(x1 >= 0 && y1 >= 0){
-                    if(x2 <= m_size.width && y2 <= m_size.height){
-                        //write code for creating line
-                        const int dy{ static_cast<int>(y2-y1) };
-                        const int dx{ static_cast<int>(x2-x1) };
+            void draw_line(const point& p1, const point& p2, const color &cl){
+                if(p1.x >= 0 && p1.y >= 0){
+                    if(p2.x <= m_size.width && p2.y <= m_size.height){
+                        const int dy{ static_cast<int>(p2.y - p1.y) };
+                        const int dx{ static_cast<int>(p2.x - p1.x) };
                         if(dx != 0){
                             for(int i = 0; i < dx; i++){
-                               int x = x1 + i;
-                               int y = y1 + dy * i / dx;
+                               int x = p1.x + i;
+                               int y = p1.y + dy * i / dx;
                                m_pixles[x * m_size.width + y] = cl;
                            }
                         }else{
-                            for(int y = y1; y < y2; y++){
-                                m_pixles[x1 * m_size.width + y] = cl;
+                            for(int y = p1.y; y < p2.y; y++){
+                                m_pixles[p1.x * m_size.width + y] = cl;
                             }
                         }
                    }else{
@@ -149,9 +182,42 @@ namespace lpz{
                 }
             }
             
-            void fill_triangle(std::size_t x1, std::size_t y1, std::size_t x2, std::size_t y2, std::size_t x3, std::size_t y3){
-                //can I find a way to 'fill' the triangle by just drawing lines
+            void fill_triangle(const point& p1, const point& p2, const point& p3, const color& cl){
+                auto points = std::vector{p1, p2, p3};
+                std::sort(points.begin(), points.end(), [](const auto& p1, const auto& p2){return p1.y < p2.y;});
+                auto x_min = min_x(points);
+                auto x_max = max_x(points);
+                auto y_min = min_y(points);
+                auto y_max = max_y(points);
                 
+                std::size_t left_x = 0;
+                std::size_t right_x = 0;
+                for(auto y : std::ranges::iota_view{y_min, y_max + 1}){
+                   if(points.back().y != points.front().y){
+                        if(y < points.at(1).y){
+                            auto factor = (y < points.at(1).y) / (points.back().y - points.front().y);
+                            left_x = points.front().x + factor * (points.back().x - points.front().x);
+                        }else{
+                            auto factor = (y - points.at(1).y) / (points.back().y - points.at(1).y);
+                            left_x = points.at(1).x + factor * (points.back().x - points.at(1).x);
+                        }
+                    }else{
+                          left_x = points.front().x;
+                    }
+                    
+                    if(y < points.at(1).y){
+                        auto factor = (y - points.front().y) / (points.at(1).y - points.front().y);
+                        right_x = points.front().x + factor * (points.at(1).x - points.front().x);
+                    }else{
+                        auto factor = (y - points.at(1).y) / (points.back().y - points.at(1).y);
+                        right_x = points.at(1).x + factor * (points.back().x - points.at(1).x);
+                    }
+
+                    for(auto x : std::ranges::iota_view(left_x, right_x + 1)){
+                        m_pixles[x * m_size.width + y] = cl;
+                    }
+                
+                }
             }
     
             size const& getSize() const{
