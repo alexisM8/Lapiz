@@ -25,12 +25,10 @@ DEALINGS IN THE SOFTWARE.
 #define lapiz_hpp
 
 #include <algorithm>
-#include <cmath>
 #include <fstream>
 #include <vector>
 #include <ranges>
 #include <string>
-#include <cstdint>
 #include <iostream>
 
 namespace lpz{
@@ -90,25 +88,25 @@ namespace lpz{
     };
     
     //utility functions begin
-    std::size_t min_x(const std::vector<point>& points){
+    inline std::size_t min_x(const std::vector<point>& points){
         auto copy = points;
         std::sort(copy.begin(), copy.end(), [](const auto& p1, const auto& p2){return p1.x < p2.x;});
         return copy.front().x;
     }
 
-    std::size_t max_x(const std::vector<point>& points){
+    inline std::size_t max_x(const std::vector<point>& points){
         auto copy = points;
         std::sort(copy.begin(), copy.end(), [](const auto& p1, const auto& p2){return p1.x > p2.x;});
         return copy.front().x;
     }
 
-    std::size_t min_y(const std::vector<point>& points){
+    inline std::size_t min_y(const std::vector<point>& points){
         auto copy = points;
         std::sort(copy.begin(), copy.end(), [](const auto& p1,const auto& p2){return p1.y < p2.y;});
         return copy.front().y;
     }
 
-    std::size_t max_y(const std::vector<point>& points){
+    inline std::size_t max_y(const std::vector<point>& points){
         auto copy = points;
         std::sort(copy.begin(), copy.end(), [](const auto& p1,const auto& p2){return p1.y > p2.y;});
         return copy.front().x;
@@ -127,18 +125,23 @@ namespace lpz{
             lapiz(std::size_t WIDTH, std::size_t HEIGHT, std::string FILENAME) : m_size({HEIGHT, WIDTH}),
                         m_filename(FILENAME), m_pixles(std::vector<color>(WIDTH*HEIGHT)) {}
 
-            void fill_circle(const point& p, const circle &circ){
-               const point center{p.x + circ.radius, p.y + circ.radius};
-               for(int y1 = p.y; y1 < p.y + circ.radius * 2; y1++){
-                    for(int x1 = p.x; x1 < p.x + circ.radius * 2; x1++){
-                        auto dist = std::sqrt((std::pow(center.x - x1, 2) + std::pow(center.y - y1, 2)));
-                        if(std::floor(dist) <= circ.radius){
-                            m_pixles[x1 * m_size.width + y1] = circ.c;
+
+            void fill_circle(const point& p, const circle& circ) {
+                const point center{p.x + circ.radius, p.y + circ.radius};
+
+                for (int y1 = p.y; y1 <= p.y + 2 * circ.radius; y1++) {
+                    for (int x1 = p.x; x1 <= p.x + 2 * circ.radius; x1++) {
+                        auto dx = center.x - x1;
+                        auto dy = center.y - y1;
+                        if (dx * dx + dy * dy <= circ.radius * circ.radius) {
+                            if (x1 >= 0 && x1 < static_cast<int>(m_size.width) && y1 >= 0 && y1 < static_cast<int>(m_size.height)) {
+                                m_pixles[y1 * m_size.width + x1] = circ.c;
+                            }
                         }
                     }
                 }
             }
-                
+    
             void fill_rect(const point& p, const rectangle &rect){
                if(p.x + rect.length <= m_size.height && p.y + rect.width <= m_size.width){
                     for(std::size_t y1 = p.y; y1 < p.y + rect.width; y1++){
